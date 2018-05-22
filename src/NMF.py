@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
  
 X = mp.imread("../nb.png")
 
-model = NMF(n_components=4, init='nndsvd', random_state=0, beta_loss='frobenius', max_iter=5000)
+model = NMF(n_components=540, init='nndsvda', random_state=0, beta_loss='frobenius', max_iter=500, tol=0.0001)
 W = model.fit_transform(X)
 H = model.components_
 
@@ -18,6 +18,6 @@ print(H)
 
 X1 = W.dot(H)
 
-plt.imshow(X1)
+plt.imshow(X1, cmap = plt.get_cmap('gray'))
 plt.show()
 
