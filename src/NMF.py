@@ -5,8 +5,7 @@ import matplotlib.image as mp
 import numpy.ma as ma
 import matplotlib.pyplot as plt
 import random
-import theano
-import theano.tensor as T
+
 
 from scipy.sparse.linalg import svds
 
@@ -16,9 +15,14 @@ def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
     
     
-gray = mp.imread("../black.png")
-gray = rgb2gray(gray)
-	       
+#gray = mp.imread("../black.png")
+#gray = rgb2gray(gray)
+
+gray = np.ones((16,16))
+
+for i in range(0,15):
+	for j in range(0,15):
+		gray [i][j] = random.choice([0,1])
 
 def appr_seminmf(M, r):
     """
@@ -60,10 +64,14 @@ def appr_seminmf(M, r):
 
     return U, V
 
-n,m =gray.shape
+n,m = gray.shape
 
-
-for i in range(2):
-	appr_seminmf(gray,m)
-	m=m/2
-	print(gray)
+V = gray
+    
+for i in range(5):
+	
+	U,V = appr_seminmf(V, m)
+	m = int(0.85*m)
+	print(m)
+	print("\n")
+	print(U,V)
