@@ -1,28 +1,22 @@
-from sklearn.decomposition import NMF
-import pandas
 import numpy as np
 import matplotlib.image as mp
 import numpy.ma as ma
 import matplotlib.pyplot as plt
 import random
-
+import sklearn
+from sklearn.cluster import KMeans
 
 from scipy.sparse.linalg import svds
 
 
-def rgb2gray(rgb):
 
-    return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
-    
-    
-#gray = mp.imread("../black.png")
-#gray = rgb2gray(gray)
+Mtest = np.ones((400,400))
 
-gray = np.ones((16,16))
+n,m = Mtest.shape
 
-for i in range(0,15):
-	for j in range(0,15):
-		gray [i][j] = random.choice([0,1])
+for i in range(0,n):
+	for j in range(0,m):
+		Mtest [i][j] = random.choice([0,1])
 
 def appr_seminmf(M, r):
     """
@@ -64,14 +58,22 @@ def appr_seminmf(M, r):
 
     return U, V
 
-n,m = gray.shape
 
-V = gray
-    
-for i in range(5):
-	
-	U,V = appr_seminmf(V, m)
-	m = int(0.85*m)
-	print(m)
-	print("\n")
-	print(U,V)
+def deepNMFTest(nbCouche, tailleCouche, M):
+    n,m = M.shape
+
+
+    for i in range(nbCouche):
+        m = tailleCouche[i]
+        U,V = appr_seminmf(M, m)
+
+        fic1 = "U{}.csv".format(i)
+        fic2 = "V{}.csv".format(i)
+        np.savetxt(fic1,U, delimiter=",")
+        np.savetxt(fic2,V, delimiter=",")
+
+    return U,V
+
+
+U,V = deepNMFTest(2,[300,100],Mtest)
+
