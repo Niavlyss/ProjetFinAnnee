@@ -1,11 +1,14 @@
 from __future__ import print_function
 
+import time
+
 import numpy as np
 import sklearn
-
-from sklearn.cluster import KMeans
 from scipy.io import loadmat
-from dsnmf import DSNMF
+from sklearn.cluster import KMeans
+
+from src.code_Trigeorgis import DSNMF
+
 mat = loadmat('data/PIE_pose27.mat', struct_as_record=False, squeeze_me=True)
 
 data, gnd = mat['fea'].astype('float32'), mat['gnd']
@@ -26,13 +29,17 @@ def evaluate_nmi(X):
 
 dsnmf = DSNMF(data, layers=(400, 100))
 
-for epoch in range(1000):
+tmps1 = time.time()
+for epoch in range(10):
     residual = float(dsnmf.train_fun())
 
-print("Epoch {}. Residual [{:.2f}]".format(epoch, residual), end="\r")
+    print("Epoch {}. Residual [{:.2f}]".format(epoch, residual), end="\r")
 
 fea = dsnmf.get_features().T # this is the last layers features i.e. h_2
 pred = kmeans.fit_predict(fea)
 score = sklearn.metrics.normalized_mutual_info_score(gnd, pred)
 
 print("NMI: {:.2f}%".format(100 * score))
+
+tmps2 = time.time()-tmps1
+print("temps d'execution : %f" %tmps2)
