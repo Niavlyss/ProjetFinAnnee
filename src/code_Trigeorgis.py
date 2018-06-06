@@ -1,10 +1,10 @@
 from __future__ import print_function
+
 from collections import OrderedDict
 
 import numpy as np
 import theano
 import theano.tensor as T
-
 from scipy.sparse.linalg import svds
 
 relu = lambda x: 0.5 * (x + abs(x))
@@ -26,6 +26,8 @@ def appr_seminmf(M, r):
         raise ValueError("The number of components (r) has to be >=2.")
 
     A, S, B = svds(M, r-1)
+    mini = min(A.shape)
+    print(mini)
     S = np.diag(S)
     A = np.dot(A, S)
  
